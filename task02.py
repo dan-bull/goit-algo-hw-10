@@ -37,23 +37,24 @@ ax.set_title('Графік інтегрування f(x) = x^2 від ' + str(a)
 plt.grid()
 plt.show()
 
-
 def monte_carlo_integration(func, a, b, n=100000):
 
     x_rand = np.random.uniform(a, b, n)
-    y_rand = func(x_rand)
-
-    # Обчислення площі прямокутника, що обмежує функцію
-    rectangle_area = (b - a) * np.max(y_rand)
-
+    y_rand = np.random.uniform(0, func(b), n)  # y-координати між 0 і f(b)
+    
+    # Кількість точок, що лежать під кривою
+    points_under_curve = np.sum(y_rand < func(x_rand))
+    
+    # Площа прямокутника
+    rectangle_area = (b - a) * func(b)
+    
     # Обчислення площі під кривою (інтеграл)
-    integral_approx = rectangle_area * np.mean(y_rand)
+    integral_approx = rectangle_area * (points_under_curve / n)
     return integral_approx
 
 # Обчислення інтеграла
 integral_mc = monte_carlo_integration(f, a, b)
 print(f"Наближене значення інтеграла (Монте-Карло): {integral_mc:.4f}")
-
 
 integral_quad, _ = spi.quad(f, a, b)
 print(f"Інтеграл (quad): {integral_quad:.4f}")
